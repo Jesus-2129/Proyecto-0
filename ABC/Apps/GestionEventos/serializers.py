@@ -1,13 +1,14 @@
 from rest_framework import serializers
-#from django.contrib.auth.models import User
-from .models import Evento , Usuario
+from django.contrib.auth.models import User
+from .models import Evento, Usuario
+
 
 class UserSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     username = serializers.CharField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    email = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField()
 
     def create(self, validate_data):
@@ -21,14 +22,15 @@ class UserSerializer(serializers.Serializer):
         return instance
 
     def validate_username(self, data):
-        users = Usuario.objects.filter(username = data)
+        users = Usuario.objects.filter(username=data)
         if len(users) != 0:
-            raise serializers.ValidationError("Este nombre de usuario ya existe")
+            raise serializers.ValidationError(
+                "Este nombre de usuario ya existe")
         else:
             return data
 
     def validate_email(self, data):
-        emails = Usuario.objects.filter(email = data)
+        emails = Usuario.objects.filter(email=data)
         if len(emails) != 0:
             raise serializers.ValidationError("Este correo ya fue usado")
         else:
@@ -55,5 +57,6 @@ class EventoSerializer(serializers.ModelSerializer):
         instance.event_final_date = validate_data.get('event_final_date')
         instance.event_type = validate_data.get('event_type')
         instance.thumbnail = validate_data.get('thumbnail')
+        instance.event_user = validate_data.get('event_user')
         instance.save()
-        return instance    
+        return instance

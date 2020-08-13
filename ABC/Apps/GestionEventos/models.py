@@ -1,16 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+import uuid
 
 # Create your models here.
 
 
 class Usuario(User):
-     class Meta:
+    
+    class Meta:
         proxy = True
-
+        ordering = ('first_name', )
 
 def __str__(self):
-    return '{2},{3}'.format(self.first_name,self.last_name)
+    return self.name
 
 # class Usuario(models.Model):
 #     id = models.AutoField(primary_key=True)
@@ -64,5 +68,6 @@ class Evento(models.Model):
     # TIPOS = (('P', 'Presencial'), ('V', 'Virtual'))
     # Tipo = models.CharField(max_length=1, choices=TIPOS, null=False, blank=False)
     event_creation_date = models.DateTimeField(auto_now_add=True)
-    User = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    event_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # event_user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     thumbnail = models.CharField(max_length=50)
