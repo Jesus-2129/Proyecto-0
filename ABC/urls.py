@@ -16,24 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from ABC.Apps.GestionEventos.api import UserAPI
-from ABC.Apps.GestionEventos.views import EventoList, UsuarioList # Login, EventoViewSet,
 from rest_framework.authtoken import views
 from ABC.Apps.GestionEventos.views import *
-
-# evento_list = EventoViewSet.as_view({
-#     'get': 'list',
-#     'post': 'create'
-# })
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/create-user/', UserAPI.as_view() , name = 'api_create_user'),
-    # path('api/events/', EventoList.as_view(), name = 'evento_list'),
     path('api/events/', EventoList2.as_view(), name = 'evento_list'),
-    path('api/api-auth/', views.obtain_auth_token),
-    # path('api/events/', Eventos.as_view(), name = 'evento_list'),
+    # path('api/api-auth/', views.obtain_auth_token),
+    path('api/api-auth/', obtain_auth_token, name='api_token_auth'),
     path('api/events/<int:evento_id>/', EventoDetalle.as_view(), name = 'detalle_evento_list'),
-    # path('login/', Login.as_view(), name = 'Login'),
-    # path('Lista_usuarios/', UsuarioList.as_view(), name = 'lista_usuarios_faq'),
-    path('hello/', HelloView.as_view(), name='hello'),
 ]
