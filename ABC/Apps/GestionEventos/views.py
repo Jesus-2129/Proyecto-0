@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from .models import Evento, Usuario
 from .serializers import EventoSerializer, UserSerializer
 from . import serializers
+from django.http import Http404
 
 # Create your views here.
 
@@ -84,6 +85,7 @@ class EventoList(generics.ListCreateAPIView):
 #Este si sirve
 
 class EventoList2(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         user = request.user.id
@@ -104,34 +106,64 @@ class EventoList2(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class EventoDetalle(APIView):
+    permission_classes = (IsAuthenticated,)
 
-class Login(FormView):
-    template_name = "login.html"
-    form_class = AuthenticationForm
-    success_url = reverse_lazy('admin/')
+    def get(self, request, evento_id):
+        user = request.user.id
+        eventos = Evento.objects.filter(event_user=user, id=evento_id)
+        serializer = serializers.EventoSerializer(eventos, many=True)
+        return Response(serializer.data)
 
-    @method_decorator(csrf_protect)
-    @method_decorator(never_cache)
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return HttpResponseRedirect(self.get_success_url())
-        else:
-            return super(Login, self).dispatch(request, *args, *kwargs)
+    def put(self, request, evento_id):
+        user = request.user.id 
+        eventos = Evento.objects.get(event_user=user, id=evento_id)
+        serializer = serializers.EventoSerializer(eventos, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            eventos_guardado = serializer.save()
+        # eventos.update()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def form_valid(self, form):
-        user = authenticate(
-            username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-        token, _ = Token.objects.get_or_create(user=user)
-        if token:
-            login(self.request, form.get_user())
-            return super(Login, self).form_valid(form)
+    def delete(self, request, evento_id):
+        try:
+            eventos = Evento.objects.get(id=evento_id)
+        except Evento.DoesNotExist:
+            raise Http404
+        eventos.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+  
+        # user = request.user.id
+        # eventos = Evento.objects.filter(event_user=user, id=evento_id)
+        # eventos.delete()
+        # return Response(status=status.HTTP_204_NO_CONTENT)  
+
+# class Login(FormView):
+#     template_name = "login.html"
+#     form_class = AuthenticationForm
+#     success_url = reverse_lazy('admin/')
+
+#     @method_decorator(csrf_protect)
+#     @method_decorator(never_cache)
+#     def dispatch(self, request, *args, **kwargs):
+#         if request.user.is_authenticated:
+#             return HttpResponseRedirect(self.get_success_url())
+#         else:
+#             return super(Login, self).dispatch(request, *args, *kwargs)
+
+#     def form_valid(self, form):
+#         user = authenticate(
+#             username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+#         token, _ = Token.objects.get_or_create(user=user)
+#         if token:
+#             login(self.request, form.get_user())
+#             return super(Login, self).form_valid(form)
 
 
-class Logout(APIView):
-    def get(self, request, format=None):
-        request.user.auth_token.delete()
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
+# class Logout(APIView):
+#     def get(self, request, format=None):
+#         request.user.auth_token.delete()
+#         logout(request)
+#         return Response(status=status.HTTP_200_OK)
 
 
 class EventoViewSet(generics.ListCreateAPIView):

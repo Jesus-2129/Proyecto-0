@@ -60,3 +60,18 @@ class EventoSerializer(serializers.ModelSerializer):
         instance.event_user = validate_data.get('event_user')
         instance.save()
         return instance
+
+    def update(self, instance, validate_data):
+        # instance = Evento()
+        instance.event_name = validate_data.get('event_name',instance.event_name)
+        instance.event_category = validate_data.get('event_category', instance.event_category)
+        instance.event_place = validate_data.get('event_place', instance.event_place)
+        instance.event_address = validate_data.get('event_address', instance.event_address)
+        instance.event_initial_date = validate_data.get('event_initial_date', instance.event_initial_date)
+        instance.event_final_date = validate_data.get('event_final_date', instance.event_final_date)
+        instance.event_type = validate_data.get('event_type',instance.event_type)
+        instance.thumbnail = validate_data.get('thumbnail' , instance.thumbnail)
+        instance.event_user = validate_data.get('event_user', instance.event_user)
+        
+        instance.save()
+        return instance
