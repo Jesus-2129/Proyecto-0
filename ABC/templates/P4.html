@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Prueba</title>
+    </head>
+    <body>
+        {% if user.is_authenticated %}
+        <h1> Hello {{ user.username }} </h1>
+            <br>
+            {% for data in queryset %}
+            Nombre del Evento: {{data.event_name}}
+            <br>
+            Nombre del Usuario: {{data.event_user}}
+            <br>
+            Categoria del Evento: {{data.event_category}}
+            <br>
+            Id del evento: {{data.id}}
+            <br>
+            <a href="http://127.0.0.1:8000/api/events/delete/{{data.id}}">Eliminar</a>
+            <a href="http://127.0.0.1:8000/api/events/update/{{data.id}}">Modificar</a>
+            <br>
+            <br>
+            {% endfor %}
+        {% else %}
+        <h1> No esta autenticado </h1>
+        {% endif %}
+    </body>
+</html>
+

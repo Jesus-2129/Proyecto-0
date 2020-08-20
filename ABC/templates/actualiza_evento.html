@@ -1,0 +1,30 @@
+<form class="formulario" method="post">
+    {% csrf_token %}
+    {{formulario}}
+
+<input class="control" type="submit" value="Actualizar Evento" id="boton">
+   
+</form>
+
+<h2>Modifica un evento</h2>
+<div class="contenedor">
+    <p>Nombre del evento: <input class="control" type="text" name="event_name" value='{{eventos.event_name}}'></p>
+    <p>Categoría del Evento. Seleccione una categoría de la lista:
+        <select name="event_category" value={{eventos.event_category}}> 
+            <option value="Conferencia">Conferencia</option>
+            <option value="Seminario">Seminario</option>
+            <option value="Congreso">Congreso</option>
+            <option value="Curso">Curso</option>
+        </select></p>
+    <p>Nombre del lugar donde se desarrolla el evento.: <input class="event_place" type="" name="event_place" value='{{eventos.event_place}}'></p>
+    <p>Dirección del lugar donde se desarrolló del evento.: <input class="control" type="text" name="event_address" placeholder="event_address" value='{{eventos.event_address}}'></p>
+    <p>Fecha y hora de inicio del evento.: <input class="control" type="date" name="event_initial_date" placeholder="event_initial_date" value='{{eventos.event_initial_date}}'></p>
+    <p>Fecha y hora de fin del evento.: <input class="control" type="date" name="event_final_date" placeholder="event_final_date" value='{{eventos.event_final_date}}'></p>
+    <p>Categoría del Evento. Seleccione una categoría de la lista:
+        <select name="event_type" value='{{eventos.event_type}}'>
+            <option value="Presencial">Presencial</option>
+            <option value="Virtual">Virtual</option>
+        </select></p>
+    <p>Usuario: <input class="control" type="text" name="event_user" value='{{eventos.event_user}}'></p>    
+
+</div>

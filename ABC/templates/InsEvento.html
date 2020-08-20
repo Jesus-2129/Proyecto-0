@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Formulario de Registro</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="\core\static\fondo.css">
+  </head>
+  <body>
+    <form class="formulario" method="post">
+      {% csrf_token %}
+      {{formulario}}
+      <input class="control" type="submit" value="Crear Evento" id="boton">
+    </form>
+  </body>
+</html>
