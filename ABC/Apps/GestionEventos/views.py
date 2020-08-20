@@ -68,37 +68,41 @@ def Crear_Usuario(request):
     formularioUsr = UsuarioForm()
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
+        print(form)
         if form.is_valid():
+            print("Entro")
             form.save()
-            return form
-        # return render(request, 'login.html')
+            return render(request,'login.html', {'formulario': formularioUsr})
         else:
-            return form
+            return render(request,'registro.html', {'formulario': formularioUsr})
     else:
         formularioUsr = UsuarioForm()
-    return Response(request, 'registro.html')     
+    return render(request,'registro.html', {'formulario': formularioUsr})    
 
-@csrf_exempt
-def home(request):
-    
-    formularioIns = userForm()
-    if request.method == 'POST':
-        form = userForm(request.POST)
-        if form.is_valid():
-            form.save()
-            print(form)
-            # return render_to_response('home.html', {'formulario':formularioIns}, RequestContext(request))
-            return form
-            # return render(request,'home.html', {'formulario':formularioIns})
-        else:
-            return form
-            # return render(request,'home.html', {'formulario':formularioIns})
-            # return render_to_response('primeraDama.html', {'formulario':form, 'accion':accion, 'ran':ran}, RequestContext(request))
-    else:
-        formularioIns = userForm()
-    # return render(request, 'primeraDama.html', {'formulario':form, 'accion':accion,'ran':ran})
-    # return render(request, 'home.html', {'formulario':formularioIns})
-    return Response(formularioIns)
+def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
+        )
+
+        user.set_password(validated_data['password'])
+        user.save()
+
+        return user
+# def log_final(request):
+#     formularioLog = LogForm()
+#     if request.method == 'POST':
+#         form = LogForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return render(request,'login.html', {'formulario': formularioLog})
+#         else:
+#             return render(request,'home.html', {'formulario': formularioLog})
+#     else:
+#         formularioLog = LogForm()
+#     return render(request, 'home.html', {'formulario': formularioLog})
 
 @csrf_exempt
 # @method_decorator(csrf_protect)

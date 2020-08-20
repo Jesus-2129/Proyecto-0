@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from .models import Usuario, Evento
+from django.contrib.auth.models import User
 
 class EventoForm(ModelForm):
     class Meta:
@@ -8,5 +9,5 @@ class EventoForm(ModelForm):
 
 class UsuarioForm(ModelForm):
     class Meta:
-        model = Usuario
+        model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password')
