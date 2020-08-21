@@ -25,20 +25,17 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/create-user/', UserAPI.as_view() , name = 'api_create_user'),
     path('api/events/', EventoList2.as_view(), name = 'evento_list'), #esto es back
-    # path('api/api-auth/', views.obtain_auth_token),
+
     path('api/api-auth/', obtain_auth_token, name='api_token_auth'),
     path('api/events/<int:evento_id>/', EventoDetalle.as_view(), name = 'detalle_evento_list'),
 
 
-    path('evento/',Lista_Eventos.as_view(), name = 'Lista_eventos'),
-    # path('aaaa/',Prueba.as_view(), name = 'Prueba'),
-    # path('aaaa/',Prueba2.as_view(), name = 'Prueba2'),
-    # path('aaaa/',post_list, name = 'Prueba4'),
-    # path('aaaa/',Prueba4.as_view(), name = 'Prueba4'),
-    path('aaaa/',Listado_Eventos, name = 'Listado_Eventos'),
+    # path('evento/',Lista_Eventos.as_view(), name = 'Lista_eventos'),
+    path('api/eventos/',Listado_Eventos, name = 'Listado_Eventos'),
     path('api/events/delete/<int:evento_id>',Eliminar_Evento, name = 'Eliminar_Eventos'),
     path('api/events/update/<int:evento_id>',Modificar_Evento2, name = 'Modificar_Eventos'),
     path('api/events/create/', Crear_Evento, name = 'crear_evento'),
-    path('api/create-user-2/', Crear_Usuario, name = 'Nuevo_Usuario'),
+    # path('api/create-user-2/', Crear_Usuario, name = 'Nuevo_Usuario'),
+    path('api/create-user-2/', Usuario_Nuevo.as_view(), name = 'Nuevo_Usuario'),
 
 ]

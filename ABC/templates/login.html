@@ -1,5 +1,12 @@
+<head>
+    <title>Login</title>
+</head>
+<h1> Bienvenido </h1>
+
+
 <form method="post">
 {% csrf_token %}
 {{form}}
 <button type="submit">Login</button>
+<p><a href="http://127.0.0.1:8000/api/create-user-2">¿Aún no tienes cuenta? Regístrate aquí</a></p>
 </form>

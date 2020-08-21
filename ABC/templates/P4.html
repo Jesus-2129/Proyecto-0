@@ -1,10 +1,11 @@
 <html>
     <head>
-        <title>Prueba</title>
+        <title>Eventos</title>
     </head>
     <body>
         {% if user.is_authenticated %}
-        <h1> Hello {{ user.username }} </h1>
+        <h1> ¡Hola! {{ user.first_name }} </h1>
+        <h2> Estos son tus eventos registrados: </h2>
             <br>
             {% for data in queryset %}
             Nombre del Evento: {{data.event_name}}
@@ -20,6 +21,11 @@
             <br>
             <br>
             {% endfor %}
+
+            <form action="http://127.0.0.1:8000/api/events/create/">
+                <input type="submit" value="Registrar Nuevo Evento" />
+            </form>
+            
         {% else %}
         <h1> No esta autenticado </h1>
         {% endif %}

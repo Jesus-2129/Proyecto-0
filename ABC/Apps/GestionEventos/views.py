@@ -25,43 +25,17 @@ from django.views import View
 from .forms import EventoForm, UsuarioForm
 
 # Create your views here.
-# Este si sirve
 
+class Usuario_Nuevo(APIView, TemplateView):
+    template_name = "registro.html"
 
-class Prueba4(generics.ListCreateAPIView):
-    template = 'eventos.html'
+    def post(self, request):
+        serializer = serializers.UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return redirect('http://127.0.0.1:8000')
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(request):
-        return render(request, 'P4.html')
-
-class Prueba(APIView):
-    # token, created = Token.objects.get_or_create(user=request.user)
-    permission_classes = (IsAuthenticated,)
-    authentication_class = (TokenAuthentication,)
-    # queryset = Evento.objects.filter(event_user=user.id)
-    queryset = Evento.objects.all()
-
-
-# class Prueba2(View):
-#     template = 'eventos.html'
-
-#     def get(self, request):
-#         eventos = Evento.objects.all()
-#         return render(request, self.template)
-
-#     def post(self, request):
-#         form = AuthenticationForm(request.POST)
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             return HttpResponseRedirect('/')
-#         else:
-#             return render(request, self.template, {'form': form})
-
-#Para traer el HTML usar esto
-#AQUI!!!
 
 @csrf_exempt
 def Crear_Usuario(request):
@@ -71,42 +45,16 @@ def Crear_Usuario(request):
         print(form)
         if form.is_valid():
             print("Entro")
+            form.set_password(form.password)
             form.save()
-            return render(request,'login.html', {'formulario': formularioUsr})
+            return redirect("http://127.0.0.1:8000")
         else:
             return render(request,'registro.html', {'formulario': formularioUsr})
     else:
         formularioUsr = UsuarioForm()
     return render(request,'registro.html', {'formulario': formularioUsr})    
 
-def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
-        )
-
-        user.set_password(validated_data['password'])
-        user.save()
-
-        return user
-# def log_final(request):
-#     formularioLog = LogForm()
-#     if request.method == 'POST':
-#         form = LogForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return render(request,'login.html', {'formulario': formularioLog})
-#         else:
-#             return render(request,'home.html', {'formulario': formularioLog})
-#     else:
-#         formularioLog = LogForm()
-#     return render(request, 'home.html', {'formulario': formularioLog})
-
 @csrf_exempt
-# @method_decorator(csrf_protect)
-# @method_decorator(never_cache)
 def Crear_Evento(request):
     permission_classes = (IsAuthenticated,)
     authentication_class = (TokenAuthentication,)
@@ -114,24 +62,17 @@ def Crear_Evento(request):
     formularioIns = EventoForm()
     if request.method == 'POST':
         form = EventoForm(request.POST)
-        # print(form)
-        # if form.is_valid():
         evento = Evento(event_name=form['event_name'].value(), event_category=form['event_category'].value(), event_place=form['event_place'].value(), event_address=form['event_address'].value(), event_initial_date=form['event_initial_date'].value(), event_final_date=form['event_final_date'].value(), event_type=form['event_type'].value(), thumbnail=form['thumbnail'].value(),event_user=usere)
         evento.save()
-        # print(evento)
+            
+        return render(request, 'registro3.html', {'formulario':formularioIns})
 
-            # return render_to_response('registro2.html', {'formulario':formularioIns}, RequestContext(request))
-        return render(request, 'registro2.html', {'formulario':formularioIns})
-        # else:
-
-            # return render('InsEvento.html', {'formulario':formularioIns})
-            # return render_to_response('InsEvento.html', {'formulario':formularioIns}, RequestContext(request))
     else:
         formularioIns = EventoForm()
 
     return render(request, 'InsEvento.html', {'formulario':formularioIns})
-    # return render_to_response('InsEvento.html', {'formulario':formularioIns}, RequestContext(request))
 
+@csrf_exempt
 def Listado_Eventos(request):
     user = request.user.id
     queryset = Evento.objects.filter(event_user=user)
@@ -140,6 +81,7 @@ def Listado_Eventos(request):
     authentication_class = (TokenAuthentication,)
     return render(request, 'P4.html',{'queryset':queryset})
 
+@csrf_exempt
 def Eliminar_Evento(request, evento_id):
     user = request.user.id
     queryset = Evento.objects.filter(event_user=user)
@@ -148,8 +90,7 @@ def Eliminar_Evento(request, evento_id):
     except Evento.DoesNotExist:
         raise Http404
     eventos.delete()
-    # return render(request, 'P4.html',{'queryset':queryset})
-    return redirect("http://127.0.0.1:8000/aaaa/")  
+    return redirect("http://127.0.0.1:8000/api/eventos/")  
 
 @csrf_exempt
 def Modificar_Evento2(request, evento_id):  
@@ -157,47 +98,14 @@ def Modificar_Evento2(request, evento_id):
     usere = request.user
     eventos = Evento.objects.get(event_user=user, id=evento_id) 
     form = EventoForm(request.POST, instance = eventos)
-    # evento = Evento(event_name=form['event_name'].value(), event_category=form['event_category'].value(), event_place=form['event_place'].value(), event_address=form['event_address'].value(), event_initial_date=form['event_initial_date'].value(), event_final_date=form['event_final_date'].value(), event_type=form['event_type'].value(), thumbnail=form['thumbnail'].value(),event_user=usere)
-    # form[Usuario].value()=usere
     print(form)
     print(eventos)
     print('Voy a entrar al formulario')  
     if form.is_valid():
         print('Entre al formulario')  
         form.save()  
-        return redirect("http://127.0.0.1:8000/aaaa/")  
-        # return render(request, 'http://127.0.0.1:8000/aaaa/')
+        return redirect("http://127.0.0.1:8000/api/eventos/")  
     return render(request, 'actualiza_evento.html', {'eventos': eventos, 'formulario':form}) 
- 
-#  return redirect("/show")  
-#     return render(request, 'edit.html', {'employee': employee}) 
-
-# def Modificar_Evento(request, evento_id):
-#     permission_classes = (IsAuthenticated,)
-#     authentication_class = (TokenAuthentication,)
-#     user = request.user.id
-#     usere = request.user
-#     eventos = Evento.objects.get(event_user=user, id=evento_id)
-#     formularioIns = EventoForm()
-#     if request.method == 'POST':
-#         form = EventoForm(request.POST)
-#         # print(form)
-#         # if form.is_valid():
-#         eventos = Evento(event_name=form['event_name'].value(), event_category=form['event_category'].value(), event_place=form['event_place'].value(), event_address=form['event_address'].value(), event_initial_date=form['event_initial_date'].value(), event_final_date=form['event_final_date'].value(), event_type=form['event_type'].value(), thumbnail=form['thumbnail'].value(),event_user=usere)
-#         eventos.save()
-#         # print(evento)
-
-#             # return render_to_response('registro2.html', {'formulario':formularioIns}, RequestContext(request))
-#         return render(request, 'registro3.html', {'formulario':formularioIns})
-#         # else:
-
-#             # return render('InsEvento.html', {'formulario':formularioIns})
-#             # return render_to_response('InsEvento.html', {'formulario':formularioIns}, RequestContext(request))
-#     else:
-#         formularioIns = EventoForm()
-
-#     return render(request, 'actualiza_evento.html', {'formulario':formularioIns})
-#     # return render_to_response('InsEvento.html', {'formulario':formularioIns}, RequestContext(request))
 
 class Lista_Eventos(generics.ListCreateAPIView):
     queryset = Evento.objects.all()
@@ -252,12 +160,6 @@ class EventoDetalle(APIView):
         eventos.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# Pruebas Front
-
-# def home(request):
-#     return render(request, 'homepage.html')
-
-
 class Login(FormView):
     template_name = "login.html"
     form_class = AuthenticationForm
@@ -278,3 +180,9 @@ class Login(FormView):
         if token:
             login(self.request, form.get_user())
         return super(Login, self).form_valid(form)
+
+class Logout(APIView):
+    def get(self,request, format = None):
+        request.user.auth_token.delete()
+        logout(request)
+        return Response(status = status.HTTP_200_OK)
