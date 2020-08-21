@@ -33,7 +33,7 @@ class Usuario_Nuevo(APIView, TemplateView):
         serializer = serializers.UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return redirect('http://127.0.0.1:8000')
+            return redirect('http://172.24.98.170:8080')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -47,7 +47,7 @@ def Crear_Usuario(request):
             print("Entro")
             form.set_password(form.password)
             form.save()
-            return redirect("http://127.0.0.1:8000")
+            return redirect("http://172.24.98.170:8080")
         else:
             return render(request,'registro.html', {'formulario': formularioUsr})
     else:
@@ -90,7 +90,7 @@ def Eliminar_Evento(request, evento_id):
     except Evento.DoesNotExist:
         raise Http404
     eventos.delete()
-    return redirect("http://127.0.0.1:8000/api/eventos/")  
+    return redirect("http://172.24.98.170:8080/api/eventos/")  
 
 @csrf_exempt
 def Modificar_Evento2(request, evento_id):  
@@ -104,7 +104,7 @@ def Modificar_Evento2(request, evento_id):
     if form.is_valid():
         print('Entre al formulario')  
         form.save()  
-        return redirect("http://127.0.0.1:8000/api/eventos/")  
+        return redirect("http://172.24.98.170:8080/api/eventos/")  
     return render(request, 'actualiza_evento.html', {'eventos': eventos, 'formulario':form}) 
 
 class Lista_Eventos(generics.ListCreateAPIView):

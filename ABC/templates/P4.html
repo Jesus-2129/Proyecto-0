@@ -16,13 +16,13 @@
             <br>
             Id del evento: {{data.id}}
             <br>
-            <a href="http://127.0.0.1:8000/api/events/delete/{{data.id}}">Eliminar</a>
-            <a href="http://127.0.0.1:8000/api/events/update/{{data.id}}">Modificar</a>
+            <a href="http://172.24.98.170:8080/api/events/delete/{{data.id}}">Eliminar</a>
+            <a href="http://172.24.98.170:8080/api/events/update/{{data.id}}">Modificar</a>
             <br>
             <br>
             {% endfor %}
 
-            <form action="http://127.0.0.1:8000/api/events/create/">
+            <form action="http://172.24.98.170:8080/api/events/create/">
                 <input type="submit" value="Registrar Nuevo Evento" />
             </form>
             
